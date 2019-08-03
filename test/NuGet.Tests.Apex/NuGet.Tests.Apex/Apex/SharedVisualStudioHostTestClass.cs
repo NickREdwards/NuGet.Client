@@ -22,6 +22,7 @@ namespace NuGet.Tests.Apex
     }
 
     [Collection("SharedVSHost")]
+    [TakeScreenshot]
     public abstract class SharedVisualStudioHostTestClass : ApexBaseTestClass
     {
         private readonly IVisualStudioHostFixtureFactory _contextFixtureFactory;

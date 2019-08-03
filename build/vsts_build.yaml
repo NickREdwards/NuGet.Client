@@ -677,7 +677,7 @@ phases:
     condition: "failed()"
 
   - task: PowerShell@1
-    displayName: "RunFunctionalTests.ps1"    
+    displayName: "RunFunctionalTests.ps1"
     timeoutInMinutes: 75
     continueOnError: "true"
     inputs:
@@ -819,7 +819,7 @@ phases:
       solution: "build\\build.proj"
       msbuildVersion: "16.0"
       configuration: "$(BuildConfiguration)"
-      msbuildArguments: "/t:ApexTestsStandalone /p:TestResultOutputFormat=xml /p:BuildNumber=$(BuildNumber)"
+      msbuildArguments: "/t:ApexTestsStandalone /p:TestResultOutputFormat=xml /p:BuildNumber=$(BuildNumber) /p:ScreenshotsDirectoryPath=$(System.DefaultWorkingDirectory)\\build\\TestResults\\screenshots\\Apex"
 
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
@@ -829,6 +829,14 @@ phases:
       searchFolder: "$(System.DefaultWorkingDirectory)\\build\\TestResults"
       mergeTestResults: "true"
       testRunTitle: "NuGet.Client Apex Tests On Windows"
+    condition: "succeededOrFailed()"
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Apex screenshots as a build artifact"
+    inputs:
+      PathtoPublish: "$(System.DefaultWorkingDirectory)\\build\\TestResults\\screenshots\\Apex"
+      ArtifactName: "ApexScreenshots"
+      ArtifactType: "Container"
     condition: "succeededOrFailed()"
 
   - task: PowerShell@1

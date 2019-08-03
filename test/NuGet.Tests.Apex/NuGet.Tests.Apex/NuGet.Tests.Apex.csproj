@@ -19,6 +19,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -33,6 +34,7 @@
     <Compile Include="Apex\SharedVisualStudioHostTestClass.cs" />
     <Compile Include="Apex\NuGetApexTestService.cs" />
     <Compile Include="Apex\NuGetApexVerifier.cs" />
+    <Compile Include="Apex\TakeScreenshotAttribute.cs" />
     <Compile Include="Fixtures\ApexTestRequirementsFixture.cs" />
     <Compile Include="Fixtures\IVisualStudioHostFixtureFactory.cs" />
     <Compile Include="Fixtures\SignedPackagesTestsApexFixture.cs" />

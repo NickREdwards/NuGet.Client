@@ -1,7 +1,9 @@
 . "$PSScriptRoot\Utils.ps1"
 . "$PSScriptRoot\VSUtils.ps1"
 
+Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Web.Extensions
+Add-Type -AssemblyName System.Windows.Forms
 
 $javaScriptSerializer = [System.Web.Script.Serialization.JavaScriptSerializer]::new()
 $javaScriptSerializer.MaxJsonLength = [System.Int32]::MaxValue
@@ -55,6 +57,36 @@ function New-Guid {
     [System.Guid]::NewGuid().ToString("d").Substring(0, 4).Replace("-", "")
 }
 
+Function TakeScreenshot([Parameter(Mandatory = $True)] [System.IO.DirectoryInfo] $directory)
+{
+    $fileName = "$([System.DateTime]::UtcNow.ToString("yyyyMMdd_HHmmss.fffffffZ")).png"
+    $filePath = [System.IO.Path]::Combine($directory.FullName, $fileName)
+    $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+    $bitmap = [System.Drawing.Bitmap]::new($screen.Width, $screen.Height)
+
+    Try
+    {
+        $graphic = [System.Drawing.Graphics]::FromImage($bitmap)
+    
+        Try
+        {
+            $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+
+            $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
+
+            Write-Host "##vso[task.uploadfile]$filePath"
+        }
+        Finally
+        {
+            $graphic.Dispose()
+        }
+    }
+    Finally
+    {
+        $bitmap.Dispose()
+    }
+}
+
 # This function requires a rewrite. This is a first cut
 function RealTimeLogResults
 {
@@ -89,6 +121,7 @@ function RealTimeLogResults
     $testResults = Join-Path $currentBinFolder.FullName "Realtimeresults.txt"
 
     $lastLogLine = ""
+    $tookScreenshot = $False
 
     Try
     {
@@ -119,17 +152,32 @@ function RealTimeLogResults
                             $timeInMilliseconds = $testResult.TimeInMilliseconds
 
                             Write-Host "$status $testName $($timeInMilliseconds)ms"
+
+                            If ($status -eq 'Failed' -And !$tookScreenshot)
+                            {
+                                TakeScreenshot $currentBinFolder
+
+                                $tookScreenshot = $True
+                            }
                         }
                     }
 
                     $currentTestTime = 0
                     $currentTestId = $content.Count
+                    $tookScreenshot = $False
                 }
                 else
                 {
                     $logContent = Get-Content $log
                     $lastLogLine = $logContent[$currentTestId]
                     Write-Host $lastLogLine " and current test time is ${currentTestTime}"
+
+                    If (!$tookScreenshot -And $currentTestTime -gt 300)
+                    {
+                        TakeScreenshot $currentBinFolder
+
+                        $tookScreenshot = $True
+                    }
                 }
 
                 $logContent = Get-Content $log
