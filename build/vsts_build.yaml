@@ -720,6 +720,7 @@ phases:
   variables:
     BuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.BuildNumber']]
     FullVstsBuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
+    ScreenshotsDirectoryPath: '$(System.DefaultWorkingDirectory)\build\TestResults\screenshots\Apex'
   condition: "and(succeeded(),eq(variables['RunApexTests'], 'true')) "
   queue:
     name: DDNuGet-Windows
@@ -819,7 +820,7 @@ phases:
       solution: "build\\build.proj"
       msbuildVersion: "16.0"
       configuration: "$(BuildConfiguration)"
-      msbuildArguments: "/t:ApexTestsStandalone /p:TestResultOutputFormat=xml /p:BuildNumber=$(BuildNumber) /p:ScreenshotsDirectoryPath=$(System.DefaultWorkingDirectory)\\build\\TestResults\\screenshots\\Apex"
+      msbuildArguments: "/t:ApexTestsStandalone /p:TestResultOutputFormat=xml /p:BuildNumber=$(BuildNumber)"
 
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
@@ -832,12 +833,12 @@ phases:
     condition: "succeededOrFailed()"
 
   - task: PublishBuildArtifacts@1
-    displayName: "Publish Apex screenshots as a build artifact"
+    displayName: 'Publish Apex screenshots as a build artifact'
     inputs:
-      PathtoPublish: "$(System.DefaultWorkingDirectory)\\build\\TestResults\\screenshots\\Apex"
-      ArtifactName: "ApexScreenshots"
-      ArtifactType: "Container"
-    condition: "succeededOrFailed()"
+      PathtoPublish: '$(ScreenshotsDirectoryPath)'
+      ArtifactName: 'ApexScreenshots'
+      ArtifactType: 'Container'
+    condition: 'succeededOrFailed()'
 
   - task: PowerShell@1
     displayName: "Initialize Git Commit Status on GitHub"
