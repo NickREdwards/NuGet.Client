@@ -36,15 +36,16 @@ namespace NuGet.Tests.Apex
                     screenshot.Save(filePath, ImageFormat.Png);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Console.WriteLine(ex.ToString());
                 // Do not fail the test if we cannot take a screenshot.
             }
         }
 
         private static Bitmap TakeScreenshot()
         {
-            Rectangle screenBounds = Screen.PrimaryScreen.Bounds;
+            Rectangle screenBounds = SystemInformation.VirtualScreen;
 
             var bitmap = new Bitmap(screenBounds.Width, screenBounds.Height);
 
