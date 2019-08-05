@@ -107,6 +107,8 @@ namespace NuGet.CommandLine.XPlat.Utility
             var autoReferenceFound = false;
             var deprecatedFound = false;
 
+            packages = packages.Where(p => p.LatestPackageMetadata?.Identity?.Version != null);
+
             if (!packages.Any())
             {
                 return new PrintPackagesResult(autoReferenceFound, deprecatedFound);
@@ -132,9 +134,7 @@ namespace NuGet.CommandLine.XPlat.Utility
                        p => PrintVersion(
                                 p.ResolvedPackageMetadata.Identity.Version,
                                 p.ResolvedPackageMetadata.DeprecationMetadata != null),
-                       p => p.LatestPackageMetadata?.Identity?.Version == null
-                            ? Strings.ListPkg_NotFoundAtSources
-                            : PrintVersion(
+                       p => PrintVersion(
                                 p.LatestPackageMetadata.Identity.Version,
                                 p.LatestPackageMetadata.DeprecationMetadata != null));
             }
@@ -158,9 +158,7 @@ namespace NuGet.CommandLine.XPlat.Utility
                        p => PrintVersion(
                                 p.ResolvedPackageMetadata.Identity.Version,
                                 p.ResolvedPackageMetadata.DeprecationMetadata != null),
-                       p => p.LatestPackageMetadata?.Identity?.Version == null
-                            ? Strings.ListPkg_NotFoundAtSources
-                            : PrintVersion(
+                       p => PrintVersion(
                                 p.LatestPackageMetadata.Identity.Version,
                                 p.LatestPackageMetadata.DeprecationMetadata != null));
             }
