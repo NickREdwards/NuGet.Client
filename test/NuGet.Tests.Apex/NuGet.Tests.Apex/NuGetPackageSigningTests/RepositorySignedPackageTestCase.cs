@@ -122,7 +122,7 @@ namespace NuGet.Tests.Apex
             }
         }
 
-        [CIOnlyNuGetWpfTheory(Skip = "https://github.com/NuGet/Home/issues/8146")]
+        [CIOnlyNuGetWpfTheory]
         [MemberData(nameof(GetPackagesConfigTemplates))]
         public async Task Tampered_InstallFromPMCForPC_FailAsync(ProjectTemplate projectTemplate)
         {
@@ -134,7 +134,9 @@ namespace NuGet.Tests.Apex
             using (var testContext = new ApexTestContext(VisualStudio, projectTemplate, XunitLogger))
             {
                 await SimpleTestPackageUtility.CreatePackagesAsync(testContext.PackageSource, signedPackage);
+                CopyTestFiles(new DirectoryInfo(testContext.PackageSource), nameof(RepositorySignedPackageTestCase), "before");
                 SignedArchiveTestUtility.TamperWithPackage(Path.Combine(testContext.PackageSource, signedPackage.PackageName));
+                CopyTestFiles(new DirectoryInfo(testContext.PackageSource), nameof(RepositorySignedPackageTestCase), "after");
 
                 var nugetConsole = GetConsole(testContext.Project);
 

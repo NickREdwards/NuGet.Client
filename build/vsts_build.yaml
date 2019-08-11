@@ -927,6 +927,14 @@ phases:
       configuration: "$(BuildConfiguration)"
       msbuildArguments: "/t:ApexTestsStandalone /p:TestResultOutputFormat=xml /p:BuildNumber=$(BuildNumber)"
 
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Apex test files as artifact"
+    inputs:
+      PathtoPublish: "$(Build.Repository.LocalPath)\\TestFiles"
+      ArtifactName: "ApexTestFiles"
+      ArtifactType: "Container"
+    condition: "succeededOrFailed()"
+
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
     inputs:

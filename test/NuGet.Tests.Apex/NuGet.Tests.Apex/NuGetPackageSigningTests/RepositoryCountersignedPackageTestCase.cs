@@ -149,7 +149,9 @@ namespace NuGet.Tests.Apex
             using (var testContext = new ApexTestContext(VisualStudio, projectTemplate, XunitLogger))
             {
                 await SimpleTestPackageUtility.CreatePackagesAsync(testContext.PackageSource, signedPackage);
+                CopyTestFiles(new DirectoryInfo(testContext.PackageSource), nameof(RepositoryCountersignedPackageTestCase), "before");
                 SignedArchiveTestUtility.TamperWithPackage(Path.Combine(testContext.PackageSource, signedPackage.PackageName));
+                CopyTestFiles(new DirectoryInfo(testContext.PackageSource), nameof(RepositoryCountersignedPackageTestCase), "after");
 
                 var nugetConsole = GetConsole(testContext.Project);
 
