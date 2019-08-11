@@ -21,37 +21,37 @@ namespace NuGet.Tests.Apex
 
         public void InstallPackageFromPMC(string packageId, string version)
         {
-            var command = $"Install-Package {packageId} -ProjectName {_projectName} -Version {version} ";
+            var command = $"Install-Package {packageId} -ProjectName {_projectName} -Version {version} -Verbose";
             Execute(command);
         }
 
         public void InstallPackageFromPMC(string packageId, string version, string source)
         {
-            var command = $"Install-Package {packageId} -ProjectName {_projectName} -Version {version} -Source {source}";
+            var command = $"Install-Package {packageId} -ProjectName {_projectName} -Version {version} -Source {source} -Verbose";
             Execute(command);
         }
 
         public void UninstallPackageFromPMC(string packageId)
         {
-            var command = $"Uninstall-Package {packageId} -ProjectName {_projectName}";
+            var command = $"Uninstall-Package {packageId} -ProjectName {_projectName} -Verbose";
             Execute(command);
         }
 
         public void UpdatePackageFromPMC(string packageId, string version)
         {
-            var command = $"Update-Package {packageId} -ProjectName {_projectName} -Version {version}";
+            var command = $"Update-Package {packageId} -ProjectName {_projectName} -Version {version} -Verbose";
             Execute(command);
         }
 
         public void UpdatePackageFromPMC(string packageId, string version, string source)
         {
-            var command = $"Update-Package {packageId} -ProjectName {_projectName} -Version {version} -Source {source}";
+            var command = $"Update-Package {packageId} -ProjectName {_projectName} -Version {version} -Source {source} -Verbose";
             Execute(command);
         }
 
         public void UpdatePackageFromPMCWithConstraints(string packageId, string flags)
         {
-            var command = $"Update-Package {packageId} -ProjectName {_projectName} {flags}";
+            var command = $"Update-Package {packageId} -ProjectName {_projectName} {flags} -Verbose";
             Execute(command);
         }
 
