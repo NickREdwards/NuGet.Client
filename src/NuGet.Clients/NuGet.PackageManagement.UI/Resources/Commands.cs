@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Windows.Input;
@@ -17,6 +17,9 @@ namespace NuGet.PackageManagement.UI
 
         // no parameters
         public static ICommand RestartSearchCommand { get; } = new RoutedCommand();
+
+        // no parameters
+        public static ICommand CopyToClipboardCommand { get; } = new RoutedCommand();
 
         // no parameters. Overridable by hosting app.
         public static ICommand ShowErrorsCommand { get; set; } = new RoutedCommand();
